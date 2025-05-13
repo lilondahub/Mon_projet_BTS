@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class ="search-header">
+        <div class="page-title">iObeya Asset Finder</div>
+
+
+        <form method="POST">
+            <select name="search_type" id="search_type" onchange="updatePlaceholder()">
+                <option value="asset_tag">Asset Tag</option>
+                <option value="ip">Adresse IP</option>
+                <option value="sn">Numéro de série</option>
+            </select>
+            <input type="text" name="search_value" id="search_value" placeholder="Recherche par Asset Tag..." required>
+            <button type="submit">Rechercher</button>
+        </form>
+        
+        <script>
+            function updatePlaceholder() {
+                const select = document.getElementById("search_type");
+                const input = document.getElementById("search_value");
+                const selected = select.value;
+        
+                const placeholders = {
+                    asset_tag: "Recherche par Asset Tag...",
+                    ip: "Recherche par Adresse IP...",
+                    sn: "Recherche par Numéro de Série..."
+                };
+        
+                input.placeholder = placeholders[selected];
+            }
+        </script>
+        
+        </div>
+        
+
+        {% if error_message %}
+            <div class="error-message">{{ error_message }}</div>
+        {% endif %}
+
+        {% if infos_systeme and infos_contact %}
+        <div class="results">
+            <div class="table-wrapper">
+                <div class="table-title">Infos système</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Asset Tag</th>
+                        <th>SN</th>
+                        <th>IP</th>
+                        <th>OS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in infos_systeme %}
+                        <tr>
+                            <td>{{ row.asset_tag }}</td>
+                            <td>{{ row.sn }}</td>
+                            <td>{{ row.ip }}</td>
+                            <td>{{ row.os }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+
+            <div class="table-wrapper">
+                <div class="table-title">Infos contact</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Asset Tag</th>
+                        <th>Département</th>
+                        <th>Contact</th>
+                        <th>Localisation</th>
+                        <th>Responsable</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in infos_contact %}
+                        <tr>
+                            <td>{{ row.asset_tag }}</td>
+                            <td>{{ row.department }}</td>
+                            <td>{{ row.contact }}</td>
+                            <td>{{ row.location }}</td>
+                            <td>{{ row.responsable }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
